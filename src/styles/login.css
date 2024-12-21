@@ -1,0 +1,65 @@
+.login {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-top: 0;
+  width: 428px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add this line */
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background-color: grey;
+  margin: 0 auto;
+  display: block;
+  border-radius: 10px;
+  margin-bottom: 30 px;
+}
+
+.userFields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 362px;
+  margin-top: 30px;
+}
+
+.field {
+  height: 48px;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+}
+
+.loginField {
+  margin-top: 20px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.loginField:hover {
+  background-color: #0056b3;
+}
+
+footer a {
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
