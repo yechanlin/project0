@@ -38,7 +38,7 @@ const Login = () => {
         throw new Error(errorMessage);
       }
 
-      navigate('/profilesetup');
+      navigate('/mainPage');
     } catch (error) {
       setError(error.message);
     }

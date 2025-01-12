@@ -1,0 +1,174 @@
+/* Styles for Main Page */
+.main-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Navigation Bar */
+/* Navigation Bar */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #000;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 60px; /* Ensure consistent height */
+}
+
+/* Logo Button */
+.logo-button {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 0; /* Aligns logo button to the left */
+  text-transform: uppercase;
+}
+
+.logo-button:focus,
+.logo-button:hover {
+  color: #00bcd4; /* Add hover or focus effect for better UX */
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin-left: auto;
+}
+
+.nav-links li {
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-links li:hover {
+  color: #00bcd4;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-icon {
+  background-color: #fff;
+  color: #000;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Main Content */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120px; /* Adjust to avoid overlap with nav-bar */
+  gap: 20px;
+}
+
+.project-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 50px; /* Adjust spacing below navigation bar */
+  text-align: left;
+}
+
+.project-card h2,
+.project-card h3,
+.project-card h4 {
+  margin: 10px 0;
+}
+
+.project-card {
+  transition: transform 0.3s ease-in-out;
+}
+
+.project-card.swipe-left {
+  transform: translateX(-100%);
+}
+
+.project-card.swipe-right {
+  transform: translateX(100%);
+}
+
+.details {
+  color: #666;
+}
+
+.responsibilities {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.skills {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.skill {
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.team-members {
+  display: flex;
+  gap: 10px;
+}
+
+.member-icon {
+  font-size: 24px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.action-button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.action-button.save {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.action-button.apply {
+  background-color: #28a745;
+  color: #fff;
+}
