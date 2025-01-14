@@ -24,6 +24,56 @@ const Signup = () => {
     if (!formData.termsAccepted) {
       setError('You must accept the terms and conditions');
       return;
+      const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData((prev) => ({
+          ...prev,
+          [name]: type === 'checkbox' ? checked : value,
+        }));
+      };
+
+      const handleSignUp = async () => {
+        if (!formData.termsAccepted) {
+          setError('You must accept the terms and conditions');
+          return;
+        }
+
+        if (formData.password !== formData.retypePassword) {
+          setError('Passwords do not match');
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            'http://localhost:5001/api/users/signup',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: formData.email,
+                password: formData.password,
+                passwordConfirm: formData.retypePassword,
+              }),
+            },
+          );
+
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const responseData = await response.json(); // Parse the response JSON
+            if (!response.ok) {
+              const errorMessage = responseData.message || 'Failed to sign up';
+              throw new Error(errorMessage);
+            }
+            navigate('/profilesetup');
+          } else {
+            throw new Error('Unexpected response format');
+          }
+        } catch (error) {
+          setError(error.message);
+        }
+      };
     }
 
     try {
@@ -38,15 +88,20 @@ const Signup = () => {
           passwordConfirm: formData.retypePassword,
         }),
       });
-      const responseData = await response.json(); // Parse the response JSON
 
-      console.log(response.ok); // Debugging
       if (!response.ok) {
+        const responseData = await response.json();
         const errorMessage = responseData.message || 'Failed to sign up';
         throw new Error(errorMessage);
       }
 
-      navigate('/profilesetup');
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const responseData = await response.json(); // Parse the response JSON
+        navigate('/profilesetup');
+      } else {
+        throw new Error('Unexpected response format');
+      }
     } catch (error) {
       setError(error.message);
     }
