@@ -1,7 +1,7 @@
-export class AppError extends Error {
+// utils/apperror.js
+class AppError extends Error {
   constructor(message, statusCode) {
     super(message);
-
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
     this.isOperational = true;
@@ -9,3 +9,5 @@ export class AppError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
+
+export { AppError }; // Named export

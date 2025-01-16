@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRoutes from "./routes/users.js";
 import projectRoutes from "./routes/projects.js";
+import { AppError } from "./utils/apperror.js";
+import { globalErrorHandler } from "./controllers/errorController.js";
 
 dotenv.config();
 
@@ -14,6 +16,12 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
+
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorHandler);
 
 mongoose
   .connect(process.env.MONGO_URI, {

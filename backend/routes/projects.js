@@ -1,6 +1,8 @@
 import express from "express";
 import projectController from "../controllers/projectController.js";
 import authController from "../controllers/authController.js"; // Adjusted import
+import { AppError } from "../utils/apperror.js";
+import { globalErrorHandler } from "../controllers/errorController.js";
 
 const router = express.Router();
 
