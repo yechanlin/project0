@@ -53,8 +53,16 @@ const Signup = () => {
   };
 
   return (
+    <>
+    <div className="navbar">
+    <nav>
+        <h1 className="logo-text">NEXUS</h1>
+    </nav>
+    </div>
     <div className="signup">
-      <div className="logo"></div>
+      <div className="logo">
+        <img src="./src/components/img/nexuslogo.png" />
+    </div>
       <div className="userFields">
         <input
           className="field"
@@ -80,10 +88,6 @@ const Signup = () => {
           value={formData.retypePassword}
           onChange={handleChange}
         />
-        <button className="loginField field" onClick={handleSignUp}>
-          Sign Up
-        </button>
-        {error && <div className="error">{error}</div>}
         <div className="checkbox-container">
           <input
             type="checkbox"
@@ -97,13 +101,18 @@ const Signup = () => {
             Policy.
           </label>
         </div>
+        <button className="loginField field" onClick={handleSignUp}>
+          Sign Up
+        </button>
+        {error && <div className="error">{error}</div>}
       </div>
       <div className="footer-container">
-        <footer className="text-blue-700">
+        <footer className="text-link">
           Already have an account? <Link to="/">Log in here.</Link>
         </footer>
       </div>
     </div>
+    </>
   );
 };
 

@@ -45,7 +45,16 @@ const Login = () => {
   };
 
   return (
+    <>
+    <div className="navbar">
+    <nav>
+        <h1 className="logo-text">NEXUS</h1>
+    </nav>
+    </div>
     <div className="login">
+    <div className="logo">
+        <img src="./src/components/img/nexuslogo.png" />
+    </div>
       <div className="bg-[rgb(128, 128, 128)] m-auto h-[50px] w-[50px]"></div>
       <div className="userFields">
         <input
@@ -73,6 +82,7 @@ const Login = () => {
         New Here. <Link to="/signup">Sign up here.</Link>
       </footer>
     </div>
+    </>
   );
 };
 

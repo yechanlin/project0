@@ -15,13 +15,12 @@
 }
 
 .logo {
-  width: 50px;
-  height: 50px;
-  background-color: grey;
+  width: 200px;
+  height: 200px;
   margin: 0 auto;
   display: block;
   border-radius: 10px;
-  margin-bottom: 30 px;
+  margin-bottom: -40px;
 }
 
 .userFields {
@@ -41,7 +40,7 @@
 .loginField {
   margin-top: 20px;
   cursor: pointer;
-  background-color: #007bff;
+  background-color: #5c6c90;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -58,6 +57,7 @@ footer a {
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
+  color: #5c6c90;
 }
 
 footer a:hover {
