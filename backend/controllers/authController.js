@@ -15,11 +15,9 @@ const signToken = (id) => {
 const signup = catchAsync(async (req, res, next) => {
   const { email, password, passwordConfirm } = req.body;
 
-  console.log("Signup request received:", req.body); // Debugging
-
-  // Validate input fields
+  // Validate only essential fields
   if (!email || !password || !passwordConfirm) {
-    return next(new AppError("All fields are required.", 400));
+    return next(new AppError("Email, password and password confirmation are required.", 400));
   }
   if (password !== passwordConfirm) {
     return next(new AppError("Passwords do not match.", 400));
@@ -31,11 +29,11 @@ const signup = catchAsync(async (req, res, next) => {
     return next(new AppError("User already exists.", 400));
   }
 
-  // Create new user
+  // Create new user with only required fields
   const hashedPassword = await bcrypt.hash(password, 12);
   const newUser = await User.create({
     email,
-    password: hashedPassword,
+    password: hashedPassword
   });
 
   // Sign token and send response
@@ -44,68 +42,88 @@ const signup = catchAsync(async (req, res, next) => {
     status: "success",
     token,
     data: {
-      user: newUser,
-    },
+      user: newUser
+    }
   });
 });
 
 // Login Controller
 const login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
+    console.log('Login attempt for:', email); // Debug log
 
-  // Validate input
-  if (!email || !password) {
-    return next(new AppError("Please provide email and password.", 400));
+    // 1) Check if email and password exist
+    if (!email || !password) {
+      return next(new AppError('Please provide email and password!', 400));
+    }
+
+    // 2) Check if user exists && password is correct
+    const user = await User.findOne({ email }).select('+password');
+    console.log('User found:', user ? 'Yes' : 'No'); // Debug log
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    // 3) If everything ok, send token to client
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    console.log('Token generated:', token); // Debug log
+
+    // 4) Remove password from output
+    user.password = undefined;
+
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: {
+        user: {
+          _id: user._id,
+          userName: user.userName,
+          email: user.email
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    next(error);
   }
-
-  // Find user and validate password
-  const user = await User.findOne({ email }).select("+password");
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return next(new AppError("Invalid email or password.", 400));
-  }
-
-  // Sign token and send response
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: "success",
-    token,
-    data: {
-      user,
-    },
-  });
 });
 
 // Protect Middleware (Authorization)
 const protect = catchAsync(async (req, res, next) => {
-  // 1) Getting token and check of it's there
-
+  console.log('Headers:', req.headers);
+  
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
+    console.log('Extracted token:', token);
   }
 
   if (!token) {
-    return next(
-      new AppError("You are not logged in ! Please log in to get access", 401)
-    );
-  }
-  // 2) Verification token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log("Decoded: ", decoded);
-  // 3) Check if user still exists
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError("The user belonging to this token does no longer exist", 401)
-    );
+    return next(new AppError("No token found. Please log in.", 401));
   }
 
-  // Grant access
-  req.user = currentUser;
-  next();
+  try {
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    console.log('Token decoded:', decoded);
+    
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next(new AppError("User not found", 401));
+    }
+
+    req.user = currentUser;
+    next();
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return next(new AppError("Invalid token. Please log in again.", 401));
+  }
 });
 
 const authController = { signup, login, protect };

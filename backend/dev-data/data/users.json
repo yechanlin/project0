@@ -1,0 +1,54 @@
+{
+  "users": [
+    {
+      "email": "sarah.chen@healthtech.ai",
+      "password": "password123",
+      "userName": "Dr. Sarah Chen",
+      "profilePicture": "https://via.placeholder.com/120",
+      "dateOfBirth": "1985-03-15",
+      "school": "Stanford University",
+      "fieldOfStudy": "Computer Science",
+      "bio": "AI Research Lead at HealthTech Innovations"
+    },
+    {
+      "email": "m.rodriguez@ecofashion.com",
+      "password": "password123",
+      "userName": "Marcus Rodriguez",
+      "profilePicture": "https://via.placeholder.com/120",
+      "dateOfBirth": "1990-05-20",
+      "school": "MIT",
+      "fieldOfStudy": "Software Engineering",
+      "bio": "Full Stack Developer passionate about sustainable fashion"
+    },
+    {
+      "email": "emma.w@smartcity.tech",
+      "password": "password123",
+      "userName": "Emma Watson",
+      "profilePicture": "https://via.placeholder.com/120",
+      "dateOfBirth": "1988-09-10",
+      "school": "Berkeley",
+      "fieldOfStudy": "IoT Systems",
+      "bio": "IoT Systems Architect building smart city solutions"
+    },
+    {
+      "email": "alex@chaintrack.io",
+      "password": "password123",
+      "userName": "Alex Thompson",
+      "profilePicture": "https://via.placeholder.com/120",
+      "dateOfBirth": "1992-07-15",
+      "school": "University of Texas",
+      "fieldOfStudy": "Blockchain Development",
+      "bio": "Blockchain Developer at ChainTrack"
+    },
+    {
+      "email": "priya.p@edutech.org",
+      "password": "password123",
+      "userName": "Priya Patel",
+      "profilePicture": "https://via.placeholder.com/120",
+      "dateOfBirth": "1991-12-03",
+      "school": "Carnegie Mellon University",
+      "fieldOfStudy": "AR/VR Development",
+      "bio": "AR/VR Developer at EduTech Labs"
+    }
+  ]
+}

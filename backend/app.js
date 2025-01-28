@@ -1,8 +1,8 @@
 import express from "express";
 import morgan from "morgan";
 
-import projectRouter from "./routes/projects.js";
-import userRouter from "./routes/users.js";
+import projectRouter from "./routes/projectRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 import { AppError } from "./utils/apperror.js";
 import globalErrorHandler from "./controllers/errorController.js";
 

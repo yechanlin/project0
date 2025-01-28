@@ -1,79 +1,110 @@
+import { factory } from './handlerFactory.js';
 import Project from "../models/Project.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { AppError } from "../utils/apperror.js";
 
 // Fetch the next project
 const projectController = {
-  // Get all projects
-  getAllProjects: async (req, res) => {
+  // Basic CRUD operations using factory
+  getAllProjects: factory.getAll(Project),
+  getProjectById: factory.getOne(Project),
+  createProject: catchAsync(async (req, res, next) => {
+    // Add creator to the request body
+    const projectData = {
+      ...req.body,
+      creator: req.user._id,  // Add the logged-in user's ID as creator
+      status: 'open',         // Set initial status
+      applications: [],       // Initialize empty applications array
+    };
+
+    const doc = await Project.create(projectData);
+    
+    // Populate creator details in the response
+    const populatedDoc = await Project.findById(doc._id).populate('creator', 'userName profilePicture');
+      
+    res.status(201).json({
+      status: 'success',
+      data: { project: populatedDoc }
+    });
+  }),
+  updateProject: factory.updateOne(Project),
+  deleteProject: factory.deleteOne(Project),
+
+  //  Custom project-specific controllers...
+  fetchProjects: catchAsync(async (req, res, next) => {
     try {
-      const projects = await Project.find(); // Fetch all projects (add filtering logic if needed)
+      // Get user ID from authenticated request
+      const userId = req.user._id;
+      console.log('Fetching projects for user:', userId);
+
+      // Find all open projects except user's own
+      const projects = await Project.find({
+        creator: { $ne: userId },
+        status: 'open'
+      }).populate('creator', 'userName profilePicture');
+
       res.status(200).json({
-        staus: "success",
-        projects,
+        status: 'success',
+        results: projects.length,
+        data: { projects }
       });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching projects" });
+      console.error('Error fetching projects:', error);
+      next(error);
     }
-  },
-
-  fetchProject: async (req, res) => {
-    const { lastProjectId } = req.query; // Use query parameters to pass the last processed project ID
-    try {
-      let query = {};
-      if (lastProjectId) {
-        query = { _id: { $gt: lastProjectId } }; // Fetch the next project after the last one
-      }
-      const project = await Project.findOne(query).sort({ _id: 1 }); // Sort in ascending order
-      if (!project) {
-        return res.status(404).json({ message: "No more projects" });
-      }
-      res.status(200).json({ project });
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching project" });
-    }
-  },
-
-  // Create a project
-  createProject: async (req, res) => {
-    const { title, description, skills, budget } = req.body;
-    const project = new Project({
-      title,
-      description,
-      skills,
-      budget,
-    });
-    try {
-      await project.save();
-      res.status(201).json({ project });
-    } catch (err) {
-      res.status(400).json({ message: "Error creating project" });
-    }
-  },
+  }),
 
   // Save a project
-
-  saveProject: async (req, res) => {
-    const projectId = req.params.id;
-    try {
-      const project = await Project.findById(projectId);
-      if (!project) {
-        return res.status(404).json({ message: "Project not found" });
-      }
-      // Logic to save the project for the user
-      res.status(200).json({ message: "Project saved" });
-    } catch (error) {
-      res.status(500).json({ message: "Error saving project" });
+  saveProject: catchAsync(async (req, res, next) => {
+    const project = await Project.findById(req.params.id);
+    
+    if (!project) {
+      return next(new AppError("Project not found", 404));
     }
-  },
+    // Logic to save the project for the user
+    res.status(200).json({ 
+      status: "success",
+      message: "Project saved" 
+    });
+  }),
+
   // Apply for a project
-  applyProject: async (req, res) => {
-    // Logic to handle project application
-    res.status(200).json({ message: "Applied successfully" });
-  },
+  applyProject: catchAsync(async (req, res, next) => {
+    const project = await Project.findById(req.params.id);
+    
+    if (!project) {
+      return next(new AppError("Project not found", 404));
+    }
+
+    // Check if user already applied
+    const existingApplication = project.applications.find(
+      app => app.user.toString() === req.user._id.toString()
+    );
+
+    if (existingApplication) {
+      return next(new AppError("Already applied to this project", 400));
+    }
+
+    project.applications.push({
+      user: req.user._id,
+      status: 'pending'
+    });
+
+    await project.save();
+    res.status(200).json({ 
+      status: "success",
+      message: "Application submitted successfully" 
+    });
+  }),
 
   // Skip a project
-  skipProject: async (req, res) => {
+  skipProject: catchAsync(async (req, res, next) => {
     // Logic to skip the project
-    res.status(200).json({ message: "Project skipped" });
-  },
-};
+    res.status(200).json({ 
+      status: "success",
+      message: "Project skipped" 
+    });
+  }),
+
+}
 export default projectController;

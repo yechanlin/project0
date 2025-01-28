@@ -1,0 +1,114 @@
+{
+  "projects": [
+    {
+      "title": "AI-Powered Healthcare Platform",
+      "projectType": "Startup",
+      "location": "San Francisco, CA",
+      "description": "Building a revolutionary healthcare platform using AI for early disease detection and personalized treatment recommendations",
+      "skillsRequired": ["Python", "TensorFlow", "React", "Node.js", "AWS"],
+      "category": "Software",
+      "maxMembers": 5,
+      "status": "open"
+    },
+    {
+      "title": "Sustainable Fashion Marketplace",
+      "projectType": "Professional",
+      "location": "New York, NY",
+      "description": "Creating a marketplace connecting sustainable fashion brands with conscious consumers",
+      "skillsRequired": ["React Native", "Firebase", "UI/UX", "Node.js", "MongoDB"],
+      "category": "Business",
+      "maxMembers": 4,
+      "status": "open"
+    },
+    {
+      "title": "Smart City IoT Network",
+      "projectType": "Academic",
+      "location": "Boston, MA",
+      "description": "Developing an IoT network for smart city infrastructure monitoring and optimization",
+      "skillsRequired": ["IoT", "Embedded Systems", "C++", "Python", "Data Analysis"],
+      "category": "Research",
+      "maxMembers": 6,
+      "status": "open"
+    },
+    {
+      "title": "Blockchain-based Supply Chain",
+      "projectType": "Startup",
+      "location": "Austin, TX",
+      "description": "Creating a transparent supply chain tracking system using blockchain technology",
+      "skillsRequired": ["Solidity", "React", "Node.js", "Ethereum", "Smart Contracts"],
+      "category": "Software",
+      "maxMembers": 4,
+      "status": "open"
+    },
+    {
+      "title": "AR Educational Platform",
+      "projectType": "Academic",
+      "location": "Remote",
+      "description": "Building an augmented reality platform for interactive STEM education",
+      "skillsRequired": ["Unity", "AR Development", "3D Modeling", "C#", "UI Design"],
+      "category": "Software",
+      "maxMembers": 5,
+      "status": "open"
+    },
+    {
+      "title": "E-Sports Tournament Platform",
+      "projectType": "Startup",
+      "location": "Seattle, WA",
+      "description": "Creating a comprehensive platform for organizing and managing e-sports tournaments",
+      "skillsRequired": ["React", "Node.js", "WebSocket", "MongoDB", "Redis"],
+      "category": "Software",
+      "maxMembers": 4,
+      "status": "open"
+    },
+    {
+      "title": "Mental Health App",
+      "projectType": "Startup",
+      "location": "Remote",
+      "description": "Building a mobile app for mental health tracking and support with AI-powered insights",
+      "skillsRequired": ["React Native", "Node.js", "MongoDB", "Machine Learning", "UI/UX"],
+      "category": "Software",
+      "maxMembers": 4,
+      "status": "open"
+    },
+    {
+      "title": "Decentralized Finance Platform",
+      "projectType": "Professional",
+      "location": "Miami, FL",
+      "description": "Creating a DeFi platform for automated yield farming and portfolio management",
+      "skillsRequired": ["Solidity", "React", "Web3.js", "Smart Contracts", "TypeScript"],
+      "category": "Software",
+      "maxMembers": 5,
+      "status": "open"
+    },
+    {
+      "title": "Virtual Art Gallery",
+      "projectType": "Hobby",
+      "location": "Portland, OR",
+      "description": "Building a virtual gallery space for digital artists to showcase and sell their work",
+      "skillsRequired": ["Three.js", "WebGL", "React", "Node.js", "AWS"],
+      "category": "Design",
+      "maxMembers": 3,
+      "status": "open"
+    },
+    {
+      "title": "Smart Home Automation",
+      "projectType": "Professional",
+      "location": "Chicago, IL",
+      "description": "Developing an integrated smart home automation system with voice control",
+      "skillsRequired": ["IoT", "Python", "React", "Node.js", "MongoDB"],
+      "category": "Software",
+      "maxMembers": 4,
+      "status": "open"
+    },
+    {
+      "title": "Language Learning Game",
+      "projectType": "Academic",
+      "location": "Remote",
+      "description": "Creating an interactive game for learning languages using spaced repetition",
+      "skillsRequired": ["Unity", "C#", "UI Design", "Game Design", "Educational Design"],
+      "category": "Software",
+      "maxMembers": 3,
+      "status": "open"
+    }
+  ]
+}

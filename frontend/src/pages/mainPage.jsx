@@ -1,172 +1,143 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/mainPage.css';
+import SwipeCard from './SwipeCard';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiUser, FiBookmark, FiGrid } from 'react-icons/fi';
 
 const MainPage = () => {
-  const [currentProject, setCurrentProject] = useState(null); // Store the current project
-  const [loading, setLoading] = useState(true); // For loading state
-
-  // Fetch the next project from the API
-  const fetchNextProject = async () => {
-    setLoading(true);
-    try {
-      const lastProjectId = currentProject ? currentProject._id : null;
-      const response = await fetch(
-        `http://localhost:5001/api/projects/next${lastProjectId ? `?lastProjectId=${lastProjectId}` : ''}`,
-      );
-      const data = await response.json();
-      setCurrentProject(data.project);
-    } catch (error) {
-      console.error('Error fetching project:', error);
-    }
-    setLoading(false);
-  };
+  const [projects, setProjects] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    category: '',
+    projectType: '',
+    skills: [],
+    maxDistance: 50
+  });
 
   useEffect(() => {
-    fetchNextProject(); // Fetch the first project when the page loads
+    fetchProjects();
   }, []);
 
-  // Save the project
-  const handleSave = async () => {
+  const fetchProjects = async () => {
+    setLoading(true);
     try {
-      await fetch(
-        `http://localhost:5001/api/projects/${currentProject._id}/save`,
-        {
-          method: 'POST',
-        },
-      );
-      alert('Project saved!');
-      fetchNextProject(); // Fetch the next project
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        window.location.href = '/login';
+        return;
+      }
+
+      const response = await fetch('http://localhost:5001/api/projects/fetch', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Response status:', response.status);
+      
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Projects data:', data);
+
+      if (data.status === "success" && Array.isArray(data.data?.projects)) {
+        setProjects(data.data.projects);
+        setCurrentIndex(0);
+      } else {
+        console.error('Invalid project data format:', data);
+      }
     } catch (error) {
-      console.error('Error saving project:', error);
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Apply for the project
-  const handleApply = async () => {
+  const handleSwipe = async (direction) => {
+    const currentProject = projects[currentIndex];
+    
     try {
-      await fetch(
-        `http://localhost:5001/api/projects/${currentProject._id}/apply`,
-        {
+      const token = localStorage.getItem('token');
+      if (direction === 'right') {
+        // Apply to project
+        await fetch(`http://localhost:5001/api/projects/${currentProject._id}/apply`, {
           method: 'POST',
-        },
-      );
-      alert('Applied successfully!');
-      fetchNextProject(); // Fetch the next project
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      }
+      
+      // Move to next project
+      if (currentIndex < projects.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+      } else {
+        // Fetch more projects when we run out
+        fetchProjects();
+      }
     } catch (error) {
-      console.error('Error applying for project:', error);
-    }
-  };
-
-  // Skip the project
-  const handleSkip = async () => {
-    try {
-      await fetch(
-        `http://localhost:5001/api/projects/${currentProject._id}/skip`,
-        {
-          method: 'POST',
-        },
-      );
-      fetchNextProject(); // Fetch the next project
-    } catch (error) {
-      console.error('Error skipping project:', error);
+      console.error('Error handling swipe:', error);
     }
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="main-page">
-        {loading ? (
-          <div>Loading...</div>
-        ) : currentProject ? (
-          <ProjectCard
-            project={currentProject}
-            onSave={handleSave}
-            onApply={handleApply}
-            onSkip={handleSkip}
-          />
-        ) : (
-          <div>No more projects available!</div>
-        )}
-      </div>
-    </>
-  );
-  return (
-    <>
-      <NavBar />
-      <div className="main-page">
-        {loading ? (
-          <div>Loading...</div>
-        ) : currentProject ? (
-          <ProjectCard
-            project={currentProject}
-            onSave={handleSave}
-            onApply={handleApply}
-            onSkip={handleSkip}
-          />
-        ) : (
-          <div>No more projects available!</div>
-        )}
-      </div>
-    </>
-  );
-};
-
-const NavBar = () => {
-  return (
-    <nav className="nav-bar">
-      <button className="logo-button">NEXUS</button>
-      <ul className="nav-links">
-        <li>Projects</li>
-        <li>Members</li>
-        <li>Save</li>
-      </ul>
-      <div className="profile">
-        <span className="profile-icon">⚪</span>
-      </div>
-    </nav>
-  );
-};
-
-const ProjectCard = ({ project, onSave, onApply, onSkip }) => (
-  <div className="project-card">
-    <h2>{project.title}</h2>
-    <h3>{project.location}</h3>
-    <p className="details">{project.description}</p>
-    <h4>Responsibilities</h4>
-    <ul className="responsibilities">
-      {project.responsibilities.map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
-    </ul>
-    <h4>Skills</h4>
-    <div className="skills">
-      {project.skills.map((skill, index) => (
-        <span className="skill" key={index}>
-          {skill}
-        </span>
-      ))}
-    </div>
-    <h4>Team Members ({project.teamMembers.length})</h4>
-    <div className="team-members">
-      {project.teamMembers.map((member, index) => (
-        <div className="member-icon" key={index}>
-          ⚪
+    <div className="main-page">
+      <nav className="navbar">
+        <div className="nav-brand">NEXUS</div>
+        <div className="nav-links">
+          <button className="nav-link active">
+            <FiGrid /> Projects
+          </button>
+          <button className="nav-link">
+            <FiUser /> Members
+          </button>
+          <button className="nav-link">
+            <FiBookmark /> Saved
+          </button>
         </div>
-      ))}
+        <div className="profile-section">
+          <button className="profile-button">
+            <FiUser />
+          </button>
+        </div>
+      </nav>
+
+      <main className="main-content">
+        {loading ? (
+          <div className="loading-spinner">Loading projects...</div>
+        ) : projects.length > 0 ? (
+          <div className="card-stack">
+            {console.log('Current index:', currentIndex)}
+            {console.log('Current project:', projects[currentIndex])}
+            {currentIndex < projects.length && (
+              <SwipeCard
+                key={projects[currentIndex]._id}
+                project={projects[currentIndex]}
+                onSwipe={handleSwipe}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="no-projects">
+            <h3>No projects available</h3>
+            <p>Current projects array length: {projects.length}</p>
+            <button className="refresh-button" onClick={fetchProjects}>
+              Refresh
+            </button>
+          </div>
+        )}
+      </main>
     </div>
-    <div className="action-buttons">
-      <button className="action-button skip" onClick={onSkip}>
-        Skip
-      </button>
-      <button className="action-button save" onClick={onSave}>
-        Save
-      </button>
-      <button className="action-button apply" onClick={onApply}>
-        Apply
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 export default MainPage;

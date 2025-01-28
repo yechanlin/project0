@@ -33,66 +33,87 @@ const ProfileSetup = () => {
   };
 
   return (
-    <div className="profile-setup">
-      <h1>Create Profile</h1>
-      <div className="profile-picture">
-        <div className="circle">
-          <img
-            className="profile-image"
-            src={formData.profileImage || 'https://via.placeholder.com/120'}
-            alt="Profile"
+    <>
+      <div className="navbar">
+        <nav>
+          <h1 className="logo-text">NEXUS</h1>
+        </nav>
+      </div>
+      <div className="profile-setup">
+        <h1>Create Profile</h1>
+        <div className="profile-picture">
+          <label>Profile Picture</label>
+          <div className="circle">
+            <img
+              className="profile-image"
+              src={formData.profileImage || 'https://via.placeholder.com/120'}
+              alt="Profile"
+            />
+          </div>
+          <label htmlFor="profile-upload" className="edit-icon">
+            <div className="pencil">
+              <img src="./src/components/img/Vector.png" />
+            </div>
+          </label>
+          <input
+            type="file"
+            id="profile-upload"
+            className="file-input"
+            accept="image/*"
+            onChange={handleFileChange}
           />
         </div>
-        <label htmlFor="profile-upload" className="edit-icon">
-          <i className="fas fa-pencil-alt"></i>
-        </label>
-        <input
-          type="file"
-          id="profile-upload"
-          className="file-input"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
+        <form onSubmit={handleSubmit} className="form">
+          <label className="input-label">
+            Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </label>
+          <input
+            type="text"
+            name="userName"
+            placeholder="Enter your username"
+            value={formData.userName}
+            onChange={handleChange}
+            required
+          />
+          <label className="input-label">Date of Birth&nbsp;</label>
+          <input
+            type="date"
+            name="dateOfBirth"
+            placeholder="Pick a date"
+            value={formData.dateOfBirth}
+            onChange={handleChange}
+          />
+          <label className="input-label">Field of Study</label>
+          <input
+            type="text"
+            name="fieldOfStudy"
+            placeholder="Enter your field of study"
+            value={formData.fieldOfStudy}
+            onChange={handleChange}
+          />
+          <label className="input-label">
+            School&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </label>
+          <input
+            type="text"
+            name="school"
+            placeholder="Enter your school"
+            value={formData.school}
+            onChange={handleChange}
+          />
+          <label className="input-label">
+            Bio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </label>
+          <textarea
+            name="bio"
+            placeholder="Tell us about yourself"
+            value={formData.bio}
+            onChange={handleChange}
+          ></textarea>
+          <button type="submit">Create Profile</button>
+        </form>
       </div>
-      <form onSubmit={handleSubmit} className="form">
-        <input
-          type="text"
-          name="userName"
-          placeholder="Enter your username"
-          value={formData.userName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="date"
-          name="dateOfBirth"
-          placeholder="Date of Birth"
-          value={formData.dateOfBirth}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="fieldOfStudy"
-          placeholder="Enter your field of study"
-          value={formData.fieldOfStudy}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="school"
-          placeholder="Enter your school"
-          value={formData.school}
-          onChange={handleChange}
-        />
-        <textarea
-          name="bio"
-          placeholder="Tell us about yourself"
-          value={formData.bio}
-          onChange={handleChange}
-        ></textarea>
-        <button type="submit">Create Profile</button>
-      </form>
-    </div>
+    </>
   );
 };
 

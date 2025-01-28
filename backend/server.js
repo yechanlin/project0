@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import userRoutes from "./routes/users.js";
-import projectRoutes from "./routes/projects.js";
+import userRoutes from "./routes/userRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
 import { AppError } from "./utils/apperror.js";
 import { globalErrorHandler } from "./controllers/errorController.js";
 
