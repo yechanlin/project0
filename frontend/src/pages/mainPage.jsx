@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/mainPage.css';
 import SwipeCard from './SwipeCard';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiUser, FiBookmark, FiGrid } from 'react-icons/fi';
+import { FiUser, FiUsers, FiBookmark, FiGrid } from 'react-icons/fi';
 
 const MainPage = () => {
   const [projects, setProjects] = useState([]);
@@ -98,7 +98,7 @@ const MainPage = () => {
             <FiGrid /> Projects
           </button>
           <button className="nav-link">
-            <FiUser /> Members
+            <FiUsers /> Members
           </button>
           <button className="nav-link">
             <FiBookmark /> Saved

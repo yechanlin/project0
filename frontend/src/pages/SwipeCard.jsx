@@ -8,22 +8,45 @@ const SwipeCard = ({ project, onSwipe }) => {
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
   
-  // Transform values for card rotation and background colors
+  // Transform values for card rotation and opacity
   const rotate = useTransform(dragX, [-200, 200], [-25, 25]);
-  const opacity = useTransform(dragX, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
-  
+  const opacity = useTransform(
+    dragX,
+    [-300, -200, 0, 200, 300],
+    [0, 1, 1, 1, 0]
+  );
+
   // Background colors for accept/reject indicators
-  const acceptScale = useTransform(dragX, [0, 100], [1.1, 1.5]);
-  const rejectScale = useTransform(dragX, [-100, 0], [1.5, 1.1]);
+  const acceptScale = useTransform(dragX, [0, 150], [1.1, 1.5]);
+  const rejectScale = useTransform(dragX, [-150, 0], [1.5, 1.1]);
 
   const handleDragEnd = async (_, info) => {
-    const threshold = 100;
-    if (info.offset.x > threshold) {
-      await controls.start({ x: 500, opacity: 0 });
+    const threshold = 150; // Reduced threshold for easier swiping
+    const velocity = info.velocity.x;
+    const offset = info.offset.x;
+
+    // Consider both distance and velocity for swipe detection
+    if (offset > threshold || velocity > 500) {
+      await controls.start({ 
+        x: window.innerWidth,
+        opacity: 0,
+        transition: { duration: 0.2 }
+      });
       onSwipe('right');
-    } else if (info.offset.x < -threshold) {
-      await controls.start({ x: -500, opacity: 0 });
+    } else if (offset < -threshold || velocity < -500) {
+      await controls.start({ 
+        x: -window.innerWidth,
+        opacity: 0,
+        transition: { duration: 0.2 }
+      });
       onSwipe('left');
+    } else {
+      // Reset card position if not swiped far enough
+      controls.start({ 
+        x: 0, 
+        y: 0,
+        transition: { type: "spring", stiffness: 300, damping: 20 }
+      });
     }
   };
 
@@ -31,9 +54,15 @@ const SwipeCard = ({ project, onSwipe }) => {
     <div className="swipe-card-container">
       <motion.div
         className="swipe-card"
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        style={{ x: dragX, rotate, opacity }}
+        drag={true} // Allow dragging in all directions
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragElastic={0.7} // Add some elasticity to the drag
+        style={{ 
+          x: dragX,
+          y: dragY,
+          rotate,
+          opacity 
+        }}
         onDragEnd={handleDragEnd}
         animate={controls}
         whileTap={{ scale: 1.05 }}
@@ -70,4 +99,4 @@ const SwipeCard = ({ project, onSwipe }) => {
   );
 };
 
-export default SwipeCard; 
+export default SwipeCard;
