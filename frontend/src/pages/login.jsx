@@ -16,6 +16,7 @@ const Login = () => {
     setError('');
     
     try {
+      console.log('Attempting login with:', API_ENDPOINTS.login);
       const response = await fetch(API_ENDPOINTS.login, {
         method: 'POST',
         headers: {
@@ -24,7 +25,9 @@ const Login = () => {
         body: JSON.stringify(formData)
       });
 
+      console.log('Login response status:', response.status);
       const data = await response.json();
+      console.log('Login response data:', data);
 
       if (data.status === 'success' && data.token) {
         localStorage.setItem('token', data.token);
