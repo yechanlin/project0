@@ -72,7 +72,7 @@ const Signup = () => {
       </div>
       <div className="signup">
         <div className="logo">
-          <img src="./src/components/img/nexuslogo.png" alt="NEXUS Logo" />
+          <img src="/images/nexuslogo.png" alt="NEXUS Logo" />
         </div>
         <div className="userFields">
           <input

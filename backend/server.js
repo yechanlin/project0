@@ -12,13 +12,19 @@ dotenv.config();
 const port = process.env.PORT || 5001;
 const app = express();
 
+// ✅ Use proper CORS setup
 app.use(cors({
-  origin: '*',  // More permissive for testing
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+  origin: "https://nexus-frontend-sage.vercel.app",
+  methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
+  credentials: true, // Allow cookies and authentication headers
 }));
+
+app.options("*", cors()); // Enable preflight requests for all routes
 
 app.use(express.json());
 
+// ✅ Debugging: Log Incoming Requests
 app.use((req, res, next) => {
   console.log('Incoming request:', {
     method: req.method,
@@ -29,6 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// ✅ API Routes
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
 
@@ -36,31 +43,21 @@ app.get("/", (req, res) => {
   res.json({ status: "success", message: "NEXUS API is running" });
 });
 
-app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-});
-
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(err.status || 500).json({
-    status: 'error',
-    message: err.message || 'Internal server error'
-  });
-});
-
+// ✅ Global Error Handler
 app.use(globalErrorHandler);
 
+// ✅ MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Connected to MongoDB with URI:", process.env.MONGO_URI);
+    console.log("✅ Connected to MongoDB");
     app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+      console.log(`🚀 Server running on port ${port}`);
     });
   })
   .catch((error) => {
-    console.error("MongoDB connection error:", error);
+    console.error("❌ MongoDB Connection Error:", error);
   });

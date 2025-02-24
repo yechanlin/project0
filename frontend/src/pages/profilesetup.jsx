@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/profilesetup.css';
 
 const ProfileSetup = () => {
@@ -30,6 +31,8 @@ const ProfileSetup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+
+    navigate('/mainPage');
   };
 
   return (
@@ -46,13 +49,13 @@ const ProfileSetup = () => {
           <div className="circle">
             <img
               className="profile-image"
-              src={formData.profileImage || 'https://via.placeholder.com/120'}
+              src={formData.profileImage || '/images/default-profile.png'}
               alt="Profile"
             />
           </div>
           <label htmlFor="profile-upload" className="edit-icon">
             <div className="pencil">
-              <img src="./src/components/img/Vector.png" />
+              <img src="../..images/Vector.png" alt="Edit" />
             </div>
           </label>
           <input
@@ -110,7 +113,7 @@ const ProfileSetup = () => {
             value={formData.bio}
             onChange={handleChange}
           ></textarea>
-          <button type="submit">Create Profile</button>
+          <button type="submit" onClick={handleSubmit}>Create Profile</button>
         </form>
       </div>
     </>

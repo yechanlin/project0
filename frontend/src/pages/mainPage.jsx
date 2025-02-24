@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/mainPage.css';
-import SwipeCard from './SwipeCard';
-import { motion, AnimatePresence } from 'framer-motion';
+import SwipeCard from '../components/SwipeCard';
 import { FiUser, FiUsers, FiBookmark, FiGrid } from 'react-icons/fi';
 import { API_ENDPOINTS } from '../config/api';
 
