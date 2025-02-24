@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import Project from '../../models/Project.js';
 import User from '../../models/User.js';
+import { users } from "./users.json" assert { type: "json" };
 
 dotenv.config({ path: './backend/.env' });
 
@@ -21,38 +22,13 @@ const projects = JSON.parse(
   fs.readFileSync(`${process.cwd()}/backend/dev-data/data/projects.json`, 'utf-8')
 ).projects;
 
-const users = JSON.parse(
-  fs.readFileSync(`${process.cwd()}/backend/dev-data/data/users.json`, 'utf-8')
-).users;
-
 // Import Data into Database
 const importData = async () => {
   try {
-    // Hash passwords for all users
-    const usersWithHashedPasswords = await Promise.all(
-      users.map(async (user) => ({
-        ...user,
-        password: await bcrypt.hash(user.password, 12)
-      }))
-    );
-
-    // First import users
-    const createdUsers = await User.create(usersWithHashedPasswords, { validateBeforeSave: false });
-    console.log('Users successfully loaded!');
-
-    // Distribute projects among different users
-    const projectsWithCreator = projects.map((project, index) => ({
-      ...project,
-      creator: createdUsers[index % createdUsers.length]._id, // Distribute projects evenly among users
-      members: [createdUsers[index % createdUsers.length]._id],
-      applications: []
-    }));
-
-    await Project.create(projectsWithCreator);
-    console.log('Projects successfully loaded!');
-    console.log('All data successfully loaded!');
+    await User.create(users);
+    console.log('Data successfully loaded!');
   } catch (err) {
-    console.log('Error loading data:', err);
+    console.log(err);
   }
   process.exit();
 };

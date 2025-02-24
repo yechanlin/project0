@@ -13,11 +13,7 @@ const port = process.env.PORT || 5001;
 const app = express();
 
 app.use(cors({
-  origin: [
-    'https://nexus-frontend-sage.vercel.app',
-    'http://localhost:5173'
-  ],
-  credentials: true,
+  origin: '*',  // More permissive for testing
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 }));
 
