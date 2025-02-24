@@ -9,6 +9,11 @@ import globalErrorHandler from "./controllers/errorController.js";
 const app = express();
 app.use(express.json());
 
+
+app.get("/", (req, res) => {
+  res.send("Hello from Vercel Backend!");
+});
+
 app.use("/api/users", userRouter);
 app.use("/api/projects", projectRouter);
 
