@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/signup.css';
+import { API_ENDPOINTS } from '../config/api';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/users/signup', {
+      const response = await fetch(API_ENDPOINTS.signup, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
