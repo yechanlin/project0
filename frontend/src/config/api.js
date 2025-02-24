@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://nexus-backend-kjbmya2rn-ye-chan-lins-projects.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://nexus-backend-nkj3okwjy-ye-chan-lins-projects.vercel.app';
 
 export const API_ENDPOINTS = {
   login: `${API_BASE_URL}/api/users/login`,
