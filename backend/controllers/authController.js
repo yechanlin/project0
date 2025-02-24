@@ -48,43 +48,34 @@ const signup = catchAsync(async (req, res, next) => {
 });
 
 // Login Controller
-const login = catchAsync(async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log('Login attempt for:', email); // Debug log
+    console.log('Login attempt for:', email);
 
-    // 1) Check if email and password exist
+    // Check if email and password exist
     if (!email || !password) {
       return next(new AppError('Please provide email and password!', 400));
     }
 
-    // 2) Check if user exists && password is correct
+    // Check if user exists && password is correct
     const user = await User.findOne({ email }).select('+password');
-    console.log('User found:', user ? 'Yes' : 'No'); // Debug log
+    console.log('User found:', user ? 'yes' : 'no');
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await user.correctPassword(password, user.password))) {
       return next(new AppError('Incorrect email or password', 401));
     }
 
-    // 3) If everything ok, send token to client
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
-    );
-
-    console.log('Token generated:', token); // Debug log
-
-    // 4) Remove password from output
-    user.password = undefined;
+    // If everything ok, send token to client
+    const token = signToken(user._id);
+    console.log('Login successful, token generated');
 
     res.status(200).json({
       status: 'success',
       token,
       data: {
         user: {
-          _id: user._id,
-          userName: user.userName,
+          id: user._id,
           email: user.email
         }
       }
@@ -93,12 +84,12 @@ const login = catchAsync(async (req, res, next) => {
     console.error('Login error:', error);
     next(error);
   }
-});
+};
 
 // Protect Middleware (Authorization)
 const protect = catchAsync(async (req, res, next) => {
   console.log('Headers:', req.headers);
-  
+
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
@@ -112,7 +103,7 @@ const protect = catchAsync(async (req, res, next) => {
   try {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     console.log('Token decoded:', decoded);
-    
+
     const currentUser = await User.findById(decoded.id);
     if (!currentUser) {
       return next(new AppError("User not found", 401));

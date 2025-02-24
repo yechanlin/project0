@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -36,6 +37,10 @@ userSchema.virtual("appliedProjects", {
   localField: "_id", // The local field in the User schema
   foreignField: "applicants", // The field in the Project schema referencing User
 });
+
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 const User = mongoose.model("User", userSchema);
 export default User;
