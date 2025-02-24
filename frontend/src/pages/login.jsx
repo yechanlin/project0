@@ -17,17 +17,21 @@ const Login = () => {
     
     try {
       console.log('Attempting login with:', API_ENDPOINTS.login);
+      console.log('Login data:', formData);
+      
       const response = await fetch(API_ENDPOINTS.login, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
-      console.log('Login response status:', response.status);
+      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Login response data:', data);
+      console.log('Response data:', data);
 
       if (data.status === 'success' && data.token) {
         localStorage.setItem('token', data.token);
@@ -37,7 +41,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError('An error occurred during login');
+      setError(`Login failed: ${error.message}`);
     }
   };
 
