@@ -3,6 +3,7 @@ import '../styles/mainPage.css';
 import SwipeCard from './SwipeCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiUser, FiUsers, FiBookmark, FiGrid } from 'react-icons/fi';
+import { API_ENDPOINTS } from '../config/api';
 
 const MainPage = () => {
   const [projects, setProjects] = useState([]);
@@ -29,7 +30,7 @@ const MainPage = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5001/api/projects/fetch', {
+      const response = await fetch(`${API_ENDPOINTS.projects}/fetch`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -67,8 +68,7 @@ const MainPage = () => {
     try {
       const token = localStorage.getItem('token');
       if (direction === 'right') {
-        // Apply to project
-        await fetch(`http://localhost:5001/api/projects/${currentProject._id}/apply`, {
+        await fetch(`${API_ENDPOINTS.projects}/${currentProject._id}/apply`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
