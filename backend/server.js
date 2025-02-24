@@ -14,7 +14,7 @@ const app = express();
 
 // ✅ Use proper CORS setup
 app.use(cors({
-  origin: "https://nexus-frontend-sage.vercel.app",
+  origin: "*",
   methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true, // Allow cookies and authentication headers
